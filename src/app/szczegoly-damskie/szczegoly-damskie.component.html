@@ -1,0 +1,48 @@
+<div class="container mt-5">
+  <a routerLink="/perfumy-damskie" class="btn btn-outline-secondary mb-4">
+    ← Wróć do listy perfum
+  </a>
+
+  <div *ngIf="perfum" class="row">
+    <div class="col-md-6">
+      <img 
+        [src]="perfum.obrazek" 
+        [alt]="perfum.nazwa" 
+        class="img-fluid rounded shadow img-fixed"
+      >
+    </div>
+
+    <div class="col-md-6">
+      <h1 class="display-4">{{ perfum.nazwa }}</h1>
+      
+      <div class="my-4">
+        <span class="text-warning fs-3">
+          {{ getStars(perfum.ocena) }}
+        </span>
+        <span class="text-muted ms-3 fs-5">{{ perfum.ocena }}/5</span>
+      </div>
+
+      <p class="lead">{{ perfum.opis }}</p>
+      
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Szczegóły produktu</h5>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Cena:</strong> {{ perfum.cena }} zł</li>
+            <li class="list-group-item"><strong>Rodzaj:</strong> {{ perfum.rodzaj }}</li>
+            <li class="list-group-item"><strong>Pojemność:</strong> {{ perfum.pojemnosc }}</li>
+            <li class="list-group-item"><strong>Nuty zapachowe:</strong> {{ perfum.nutyZapachowe }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="d-flex gap-3">
+        <button class="btn btn-dark btn-lg" (click)="addToCart()">Dodaj do koszyka</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!perfum" class="alert alert-warning mt-4">
+    Nie znaleziono produktu o podanym ID.
+  </div>
+</div>

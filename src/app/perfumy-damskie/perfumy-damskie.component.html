@@ -1,0 +1,55 @@
+<div class="container mt-4">
+  <h1 class="text-center mb-4">Perfumy damskie</h1>
+    <div class="dropdown">
+      <button class="btn btn-outline-dark dropdown-toggle my-4" 
+              type="button" 
+              data-bs-toggle="dropdown">
+        Sortuj: {{ getSortLabel() }}
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a class="dropdown-item" (click)="changeSort('domyslne')">
+            Domyślne
+          </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <a class="dropdown-item" (click)="changeSort('cena')">
+            Cena {{ getSortIcon('cena') }}
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" (click)="changeSort('ocena')">
+            Ocena {{ getSortIcon('ocena') }}
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" (click)="changeSort('nazwa')">
+            Nazwa {{ getSortIcon('nazwa') }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  <div class="row">
+    @for (perfum of perfumy; track perfum.id) {
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm" [routerLink]="['/perfumy-damskie', perfum.id]">
+          <img [src]="perfum.obrazek" class="card-img-top card-img-fixed" [alt]="perfum.nazwa">
+          <div class="card-body">
+            <h5 class="card-title">{{ perfum.nazwa }}</h5>
+            <div class="mb-2">
+              @for (star of [1,2,3,4,5]; track star) {
+                <span class="text-warning">
+                  {{ star <= perfum.ocena ? '★' : '☆' }}
+                </span>
+              }
+              <small class="text-muted ms-2">{{ perfum.ocena }}/5</small>
+            </div>
+            <p class="card-text text-danger fw-bold">{{ perfum.cena }} zł</p>
+            <button class="btn btn-outline-dark">Zobacz szczegóły</button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

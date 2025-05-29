@@ -1,0 +1,15 @@
+.discount-section {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  max-width: 400px;
+}
+
+.img-fixed{
+  height: 100px;
+  object-fit: contain;
+}

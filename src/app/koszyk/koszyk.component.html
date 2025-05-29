@@ -1,0 +1,131 @@
+<div class="container mt-4 mb-4">
+  <h2>Twój koszyk</h2>
+  
+  <div *ngIf="cartService.currentCartItems | async as items">
+    <div *ngIf="items.length > 0; else emptyCart">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Produkt</th>
+            <th>Cena</th>
+            <th>Ilość</th>
+            <th>Suma</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>
+              <img [src]="item.obrazek" [alt]="item.nazwa" width="50" class="me-3 img-fixed">
+              {{ item.nazwa }}
+            </td>
+            <td>{{ item.cena }} zł</td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-sm btn-outline-secondary" 
+                        (click)="updateQuantity(item, -1)">-</button>
+                <span class="btn btn-sm disabled">{{ item.ilosc }}</span>
+                <button class="btn btn-sm btn-outline-secondary" 
+                        (click)="updateQuantity(item, 1)">+</button>
+              </div>
+            </td>
+            <td>{{ item.cena * item.ilosc }} zł</td>
+            <td>
+              <button class="btn btn-danger btn-sm" 
+                      (click)="cartService.removeFromCart(item.id)">
+                Usuń
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tr >
+  <td colspan="5">
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" 
+             [(ngModel)]="discountCode" 
+             placeholder="Wpisz kod rabatowy">
+      <button class="btn btn-outline-success" 
+              type="button" 
+              (click)="applyDiscount()">
+        Zastosuj kod
+      </button>
+    </div>
+    <div *ngIf="discountError" class="alert alert-danger mt-2">
+      Nieprawidłowy kod rabatowy
+    </div>
+    <div *ngIf="discountApplied" class="alert alert-success mt-2">
+      Kod rabatowy <strong>{{ cartService.getDiscountInfo().code }}</strong> zastosowany!
+      ({{ cartService.getDiscountInfo().percentage }}% zniżki)
+      <button class="btn btn-sm btn-outline-danger ms-3" 
+              (click)="removeDiscount()">
+        Usuń zniżkę
+      </button>
+    </div>
+  </td>
+</tr>
+<tfoot>
+  <tr>
+    <td colspan="3" class="text-end"><strong>Suma częściowa:</strong></td>
+    <td><strong>{{ cartService.getSubtotal() | number:'1.2-2' }} zł</strong></td>
+    <td></td>
+  </tr>
+  <tr *ngIf="cartService.hasDiscount()">
+    <td colspan="3" class="text-end text-success">
+      <strong>Zniżka ({{ cartService.getDiscountInfo().percentage }}%):</strong>
+    </td>
+    <td class="text-success">
+      <strong>-{{ cartService.getDiscountAmount() | number:'1.2-2' }} zł</strong>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan="3" class="text-end"><strong>Razem:</strong></td>
+    <td><strong>{{ cartService.getTotal() | number:'1.2-2' }} zł</strong></td>
+    <td></td>
+  </tr>
+</tfoot>
+      </table>
+
+      <div class="text-end">
+        <button class="btn btn-outline-danger me-2" 
+                (click)="cartService.clearCart()">
+          Wyczyść koszyk
+        </button>
+        <button class="btn btn-success" (click)="placeOrder()">
+          Złóż zamówienie
+        </button>
+      </div>
+      <div *ngIf="showReceipt" class="mt-4 p-4 border rounded bg-light">
+  <h4 style="text-align: center;">Paragon</h4>
+  <svg #barcode class="d-block mx-auto"></svg>
+  <p><strong>Data zamówienia:</strong> {{ orderDate | date:'fullDate' }} {{ orderDate | date:'shortTime' }}</p>
+
+  <ul class="list-group mb-3">
+    <li class="list-group-item d-flex justify-content-between" *ngFor="let item of cartService.cartItems.value">
+      <div>
+        {{ item.nazwa }} (x{{ item.ilosc }})
+      </div>
+      <div>
+        {{ item.cena * item.ilosc | number:'1.2-2' }} zł
+      </div>
+    </li>
+  </ul>
+
+  <div *ngIf="cartService.hasDiscount()" class="mb-2 text-success">
+    Zniżka: {{ cartService.getDiscountInfo().percentage }}% (−{{ cartService.getDiscountAmount() | number:'1.2-2' }} zł)
+  </div>
+
+  <h5>Razem do zapłaty: {{ cartService.getTotal() | number:'1.2-2' }} zł</h5>
+
+  <button class="btn btn-outline-primary mt-3" (click)="finishOrder()" routerLink="/glowna">Zakończ</button>
+</div>
+    </div>
+
+    <ng-template #emptyCart>
+      <div class="alert alert-info">
+        Twój koszyk jest pusty.
+        <a routerLink="/glowna" class="alert-link">Przejdź do sklepu</a>
+      </div>
+    </ng-template>
+  </div>
+</div>
